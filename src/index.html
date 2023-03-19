@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Random Timer Demo</title>
+    <script>
+      function randomTime(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min) * 1000;
+      }
+
+      function getCurrentTime() {
+        const now = new Date();
+        const time = now.toLocaleTimeString();
+        document.getElementById('current-time').textContent = `The current time is ${time}`;
+      }
+
+      let intervalId;
+
+      function startTimer() {
+        intervalId = setInterval(() => {
+          getCurrentTime();
+        }, randomTime(5, 15));
+      }
+
+      function stopTimer() {
+        clearInterval(intervalId);
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Random Timer Demo</h1>
+    <p id="current-time">Click "Start" to begin the timer.</p>
+    <button onclick="startTimer()">Start</button>
+    <button onclick="stopTimer()">Stop</button>
+  </body>
+</html>

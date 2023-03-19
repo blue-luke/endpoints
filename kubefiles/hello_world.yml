@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-hello-world-js
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-hello-world-js
+  template:
+    metadata:
+      labels:
+        app: nginx-hello-world-js
+    spec:
+      containers:
+      - name: nginx-hello-world-js
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: html
+        configMap:
+          name: nginx-hello-world-js-html
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-hello-world-js
+spec:
+  selector:
+    app: nginx-hello-world-js
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  type: ClusterIP
+---
+apiVersion: v1
+data:
+  index.html: |-
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>Random Timer Demo</title>
+        <script>
+          function randomTime(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min) * 1000;
+          }
+
+          function getCurrentTime() {
+            const now = new Date();
+            const time = now.toLocaleTimeString();
+            document.getElementById('current-time').textContent = `The current time is ${time}`;
+          }
+
+          let intervalId;
+
+          function startTimer() {
+            intervalId = setInterval(() => {
+              getCurrentTime();
+            }, randomTime(5, 15));
+          }
+
+          function stopTimer() {
+            clearInterval(intervalId);
+          }
+        </script>
+      </head>
+      <body>
+        <h1>Random Timer Demo</h1>
+        <p id="current-time">Click "Start" to begin the timer.</p>
+        <button onclick="startTimer()">Start</button>
+        <button onclick="stopTimer()">Stop</button>
+      </body>
+    </html>
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: nginx-hello-world-js-html
