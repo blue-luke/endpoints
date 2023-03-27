@@ -9,9 +9,14 @@ collectDefaultMetrics();
 app.use(express.static('public'));
 
 // Metrics endpoint
-app.get('/metrics', (req, res) => {
-  res.set('Content-Type', register.contentType);
-  res.end(register.metrics());
+app.get('/metrics', async (req, res) => {
+  try {
+    const metrics = await register.metrics();
+    res.set('Content-Type', register.contentType);
+    res.end(metrics);
+  } catch (error) {
+    res.status(500).end(`Error collecting metrics: ${error.message}`);
+  }
 });
 
 // Start the server
