@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: time-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: time-api
+  template:
+    metadata:
+      labels:
+        app: time-api
+    spec:
+      containers:
+      - name: time-api
+        image: blueluke/time-api:v2
+        command: ["node", "server.js"]
+        volumeMounts:
+        - name: time-api-volume
+          mountPath: /app
+        workingDir: /app
+        ports:
+        - containerPort: 3000
+      volumes:
+      - name: time-api-volume
+        configMap:
+          name: time-api-config
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: time-api-config
+data:
+  server.js: |
+    const express = require('express');
+    const app = express();
+
+    app.get('/api/time', (req, res) => {
+      res.json({ currentTime: new Date().toISOString() });
+    });
+
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      console.log(`Time API listening on port ${PORT}`);
+    });
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: time-api
+spec:
+  selector:
+    app: time-api
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP
