@@ -1,6 +1,6 @@
 FROM amd64/node:14-alpine
 
-WORKDIR /app/config
+WORKDIR /app
 
 COPY package.json .
 

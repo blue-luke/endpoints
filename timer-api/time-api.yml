@@ -14,38 +14,38 @@ spec:
     spec:
       containers:
       - name: time-api
-        image: blueluke/time-api:v4
+        image: blueluke/time-api:v8
         command: ["node", "server.js"]
-        volumeMounts:
-        - name: time-api-volume
-          mountPath: /app/config
+        # volumeMounts:
+        # - name: time-api-volume
+        #   mountPath: /app/config
         workingDir: /app
         ports:
         - containerPort: 3000
-      volumes:
-      - name: time-api-volume
-        configMap:
-          name: time-api-config
+      # volumes:
+      # - name: time-api-volume
+      #   configMap:
+      #     name: time-api-config
 
 ---
 
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: time-api-config
-data:
-  server.js: |
-    const express = require('express');
-    const app = express();
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: time-api-config
+# data:
+#   server.js: |
+#     const express = require('express');
+#     const app = express();
 
-    app.get('/api/time', (req, res) => {
-      res.json({ currentTime: new Date().toISOString() });
-    });
+#     app.get('/api/time', (req, res) => {
+#       res.json({ currentTime: new Date().toISOString() });
+#     });
 
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
-      console.log(`Time API listening on port ${PORT}`);
-    });
+#     const PORT = process.env.PORT || 3000;
+#     app.listen(PORT, () => {
+#       console.log(`Time API listening on port ${PORT}`);
+#     });
 
 ---
 

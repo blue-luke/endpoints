@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: nginx-hello-world-js
-        image: blueluke/nodejs-prometheus-app:v3
+        image: blueluke/nodejs-prometheus-app:v9
         ports:
         - containerPort: 3000
 ---

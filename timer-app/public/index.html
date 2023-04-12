@@ -8,17 +8,25 @@
         return Math.floor(Math.random() * (max - min + 1) + min) * 1000;
       }
 
-      function getCurrentTime() {
-        const now = new Date();
-        const time = now.toLocaleTimeString();
-        document.getElementById('current-time').textContent = `The current time is ${time}`;
+      async function getCurrentTimeFromAPI() {
+        try {
+          const response = await fetch('http://localhost:3001/api/time');
+          if (response.ok) {
+            const data = await response.json();
+            document.getElementById('current-time').textContent = `The current time is ${data.currentTime}`;
+          } else {
+            throw new Error(`API request failed with status ${response.status}`);
+          }
+        } catch (error) {
+          console.error('Error fetching time from API:', error);
+        }
       }
 
       let intervalId;
 
       function startTimer() {
         intervalId = setInterval(() => {
-          getCurrentTime();
+          getCurrentTimeFromAPI();
         }, randomTime(5, 15));
       }
 
