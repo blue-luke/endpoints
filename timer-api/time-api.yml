@@ -14,11 +14,11 @@ spec:
     spec:
       containers:
       - name: time-api
-        image: blueluke/time-api:v2
+        image: blueluke/time-api:v4
         command: ["node", "server.js"]
         volumeMounts:
         - name: time-api-volume
-          mountPath: /app
+          mountPath: /app/config
         workingDir: /app
         ports:
         - containerPort: 3000
