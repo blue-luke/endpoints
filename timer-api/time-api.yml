@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: time-api
-        image: blueluke/time-api:v8
+        image: blueluke/time-api:v13
         command: ["node", "server.js"]
         # volumeMounts:
         # - name: time-api-volume
